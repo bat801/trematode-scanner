@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trematode Scanner — AI для биологов</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🦐 Trematode Scanner</h1>
+            <p>Загрузите фото чашки Петри и нейросеть подсветит подозрительные объекты</p>
+        </header>
+
+        <div class="upload-area" id="uploadArea">
+            <p>📸 Перетащите фото сюда или нажмите для выбора</p>
+            <input type="file" id="fileInput" accept="image/*">
+        </div>
+
+        <div class="controls">
+            <button id="analyzeBtn" disabled>🔍 Анализировать</button>
+            <button id="clearBtn">🗑 Очистить</button>
+        </div>
+
+        <div id="resultContainer">
+            <div id="imageWrapper">
+                <img id="resultImage" src="" alt="Результат анализа" style="display: none;">
+            </div>
+            <div id="stats">
+                <div class="stat-card">
+                    <span class="stat-number" id="countDisplay">0</span>
+                    <span class="stat-label">Объектов найдено</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading" style="display: none;">⏳ Анализ изображения...</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
