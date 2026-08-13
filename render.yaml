@@ -1,0 +1,24 @@
+services:
+  # Бекенд (FastAPI)
+  - type: web
+    name: trematode-scanner-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port 10000
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+    plan: free
+
+  # Фронтенд (статический сайт)
+  - type: web
+    name: trematode-scanner-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: ""
+    staticPublishPath: .
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://trematode-scanner-backend.onrender.com
+    plan: free
