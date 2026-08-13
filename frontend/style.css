@@ -176,3 +176,29 @@ header p {
     color: #4299e1;
     font-weight: 600;
 }
+
+
+/* Фикс для отображения результата */
+#resultImage {
+    display: none;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+#resultContainer.active #resultImage {
+    display: block;
+}
+
+#loading {
+    display: none;
+    text-align: center;
+    padding: 30px;
+    font-size: 18px;
+    color: #4299e1;
+    font-weight: 600;
+}
+
+#loading.active {
+    display: block;
+}

@@ -13,19 +13,22 @@
             <p>Загрузите фото чашки Петри и нейросеть подсветит подозрительные объекты</p>
         </header>
 
-        <div class="upload-area" id="uploadArea">
-            <p>📸 Перетащите фото сюда или нажмите для выбора</p>
-            <input type="file" id="fileInput" accept="image/*">
-        </div>
+        <!-- Форма с явным запретом отправки -->
+        <form id="uploadForm" onsubmit="return false;" action="javascript:void(0);">
+            <div class="upload-area" id="uploadArea">
+                <p>📸 Перетащите фото сюда или нажмите для выбора</p>
+                <input type="file" id="fileInput" accept="image/*">
+            </div>
 
-        <div class="controls">
-            <button id="analyzeBtn" disabled>🔍 Анализировать</button>
-            <button id="clearBtn">🗑 Очистить</button>
-        </div>
+            <div class="controls">
+                <button id="analyzeBtn" type="button" disabled>🔍 Анализировать</button>
+                <button id="clearBtn" type="button">🗑 Очистить</button>
+            </div>
+        </form>
 
         <div id="resultContainer">
             <div id="imageWrapper">
-                <img id="resultImage" src="" alt="Результат анализа" style="display: none;">
+                <img id="resultImage" src="" alt="Результат анализа">
             </div>
             <div id="stats">
                 <div class="stat-card">
