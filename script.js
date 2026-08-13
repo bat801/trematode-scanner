@@ -1,7 +1,7 @@
 // Автоматически определяем API URL
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8000/detect/'
-    : 'https://trematode-scanner-backend.onrender.com/detect/';
+    : 'https://trematode-scanner.onrender.com/detect/';
 
 // DOM Elements
 const fileInput = document.getElementById('fileInput');
