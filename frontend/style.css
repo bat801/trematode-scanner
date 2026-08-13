@@ -15,7 +15,14 @@
     --accent-green-dark: #2e7d32;
     --shadow-color: rgba(0, 0, 0, 0.4);
     --radius: 16px;
+    --radius-sm: 10px;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Размеры для адаптивности */
+    --header-font: 36px;
+    --header-font-mobile: 24px;
+    --container-padding: 40px 48px;
+    --container-padding-mobile: 20px 16px;
 }
 
 /* ============================================
@@ -25,6 +32,10 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
@@ -39,6 +50,7 @@ body {
     background-image: 
         radial-gradient(ellipse at 10% 20%, rgba(67, 160, 71, 0.05) 0%, transparent 50%),
         radial-gradient(ellipse at 90% 80%, rgba(46, 125, 50, 0.05) 0%, transparent 50%);
+    line-height: 1.6;
 }
 
 /* ============================================
@@ -49,7 +61,7 @@ body {
     width: 100%;
     background: var(--bg-secondary);
     border-radius: var(--radius);
-    padding: 40px 48px;
+    padding: var(--container-padding);
     box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
     border: 1px solid var(--border-color);
     margin-bottom: 30px;
@@ -94,11 +106,12 @@ header {
 }
 
 header h1 {
-    font-size: 36px;
+    font-size: var(--header-font);
     font-weight: 800;
     color: var(--text-primary);
     letter-spacing: -0.5px;
     margin-bottom: 6px;
+    word-break: break-word;
 }
 
 header .subtitle {
@@ -122,6 +135,7 @@ header .subtitle {
     padding: 4px 14px;
     border-radius: 20px;
     border: 1px solid var(--border-color);
+    white-space: nowrap;
 }
 
 /* ============================================
@@ -136,6 +150,7 @@ header .subtitle {
     transition: var(--transition);
     background: rgba(255, 255, 255, 0.02);
     position: relative;
+    touch-action: manipulation;
 }
 
 .upload-area:hover {
@@ -147,6 +162,10 @@ header .subtitle {
     border-color: var(--accent-green-light);
     background: rgba(67, 160, 71, 0.08);
     transform: scale(1.01);
+}
+
+.upload-area:active {
+    transform: scale(0.98);
 }
 
 .upload-icon {
@@ -186,12 +205,13 @@ header .subtitle {
     gap: 14px;
     margin-top: 22px;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .controls button {
     padding: 12px 36px;
     border: none;
-    border-radius: 12px;
+    border-radius: var(--radius-sm);
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
@@ -199,6 +219,12 @@ header .subtitle {
     display: flex;
     align-items: center;
     gap: 8px;
+    touch-action: manipulation;
+    min-height: 48px;
+    justify-content: center;
+    flex: 1;
+    min-width: 120px;
+    max-width: 220px;
 }
 
 .btn-icon {
@@ -217,6 +243,10 @@ header .subtitle {
     box-shadow: 0 6px 24px rgba(67, 160, 71, 0.35);
 }
 
+#analyzeBtn:active:not(:disabled) {
+    transform: scale(0.96);
+}
+
 #analyzeBtn:disabled {
     background: #2a4a3a;
     color: #6d8f7a;
@@ -233,6 +263,10 @@ header .subtitle {
 #clearBtn:hover {
     background: rgba(255, 255, 255, 0.12);
     transform: translateY(-2px);
+}
+
+#clearBtn:active {
+    transform: scale(0.96);
 }
 
 /* ============================================
@@ -254,6 +288,7 @@ header .subtitle {
     overflow: hidden;
     margin-bottom: 20px;
     border: 1px solid var(--border-color);
+    position: relative;
 }
 
 #resultImage {
@@ -273,9 +308,11 @@ header .subtitle {
 .stat-card {
     background: var(--bg-card);
     padding: 16px 32px;
-    border-radius: 12px;
+    border-radius: var(--radius-sm);
     text-align: center;
     min-width: 140px;
+    flex: 1;
+    max-width: 200px;
     border: 1px solid var(--border-color);
 }
 
@@ -306,13 +343,15 @@ header .subtitle {
 .action-btn {
     padding: 8px 20px;
     border: 1px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
     transition: var(--transition);
     background: rgba(255, 255, 255, 0.03);
     color: var(--text-muted);
+    touch-action: manipulation;
+    white-space: nowrap;
 }
 
 .action-btn:hover:not(:disabled) {
@@ -321,13 +360,13 @@ header .subtitle {
     color: var(--text-secondary);
 }
 
+.action-btn:active:not(:disabled) {
+    transform: scale(0.96);
+}
+
 .action-btn:disabled {
     opacity: 0.4;
     cursor: not-allowed;
-}
-
-.action-btn.secondary:disabled {
-    opacity: 0.4;
 }
 
 /* ============================================
@@ -391,7 +430,7 @@ header .subtitle {
     gap: 10px;
     padding: 10px 16px;
     background: rgba(255, 255, 255, 0.03);
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--border-color);
     font-size: 13px;
     color: var(--text-muted);
@@ -479,62 +518,336 @@ footer {
 }
 
 /* ============================================
-   RESPONSIVE
+   ============================================
+   ============================================
+   АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ
+   ============================================
+   ============================================
    ============================================ */
-@media (max-width: 600px) {
+
+/* Tablet & Small Laptops */
+@media (max-width: 768px) {
     .container {
-        padding: 24px 20px;
+        padding: 30px 24px;
+        border-radius: var(--radius-sm);
     }
     
     header h1 {
-        font-size: 26px;
+        font-size: 28px;
     }
     
     .features-preview {
-        gap: 10px;
+        gap: 12px;
     }
     
     .features-preview span {
-        font-size: 11px;
+        font-size: 12px;
         padding: 3px 10px;
     }
     
+    .upload-area {
+        padding: 36px 16px;
+    }
+    
+    .upload-icon {
+        font-size: 40px;
+    }
+    
+    .upload-text {
+        font-size: 16px;
+    }
+    
     .controls button {
-        padding: 10px 20px;
+        padding: 10px 24px;
         font-size: 14px;
+        min-height: 44px;
     }
     
     .stat-card {
-        padding: 12px 20px;
+        padding: 14px 20px;
         min-width: 100px;
     }
     
     .stat-number {
-        font-size: 26px;
+        font-size: 28px;
+    }
+}
+
+/* Mobile Phones */
+@media (max-width: 480px) {
+    body {
+        padding: 12px;
+    }
+    
+    .container {
+        padding: var(--container-padding-mobile);
+        border-radius: var(--radius-sm);
+        margin-bottom: 16px;
+    }
+    
+    .container::before {
+        height: 2px;
+    }
+    
+    header {
+        margin-bottom: 20px;
+    }
+    
+    header h1 {
+        font-size: 22px;
+        letter-spacing: -0.3px;
+    }
+    
+    header .subtitle {
+        font-size: 14px;
+    }
+    
+    .header-badge {
+        margin-bottom: 8px;
+    }
+    
+    .badge {
+        font-size: 10px;
+        padding: 3px 12px;
+    }
+    
+    .features-preview {
+        gap: 8px;
+    }
+    
+    .features-preview span {
+        font-size: 10px;
+        padding: 2px 8px;
+        white-space: normal;
+    }
+    
+    .upload-area {
+        padding: 28px 12px;
+        border-radius: var(--radius-sm);
+    }
+    
+    .upload-icon {
+        font-size: 32px;
+        margin-bottom: 8px;
+    }
+    
+    .upload-text {
+        font-size: 15px;
+    }
+    
+    .upload-hint {
+        font-size: 12px;
+    }
+    
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        margin-top: 16px;
+    }
+    
+    .controls button {
+        padding: 12px 16px;
+        font-size: 15px;
+        min-height: 48px;
+        max-width: 100%;
+        flex: 1;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .btn-icon {
+        font-size: 16px;
+    }
+    
+    #resultContainer {
+        margin-top: 20px;
+    }
+    
+    #stats {
+        flex-direction: row;
+        gap: 10px;
+    }
+    
+    .stat-card {
+        padding: 12px 16px;
+        min-width: 0;
+        flex: 1;
+    }
+    
+    .stat-number {
+        font-size: 24px;
+    }
+    
+    .stat-label {
+        font-size: 11px;
     }
     
     .action-buttons {
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
+        gap: 8px;
     }
     
     .action-btn {
+        padding: 10px 16px;
+        font-size: 13px;
         width: 100%;
-        max-width: 240px;
-        justify-content: center;
+        text-align: center;
+        white-space: normal;
+    }
+    
+    #loading {
+        padding: 24px 16px;
+    }
+    
+    .spinner {
+        width: 32px;
+        height: 32px;
+    }
+    
+    #loading p {
+        font-size: 14px;
+    }
+    
+    .coming-soon {
+        margin-top: 24px;
+        padding-top: 20px;
+    }
+    
+    .coming-soon h3 {
+        font-size: 14px;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    
+    .feature-item {
+        padding: 8px 12px;
+        font-size: 12px;
+        gap: 8px;
+    }
+    
+    .feature-icon {
+        font-size: 16px;
     }
     
     .footer-content {
         flex-direction: column;
         text-align: center;
-        gap: 8px;
+        gap: 6px;
+        padding: 12px 0 4px;
+        font-size: 12px;
+    }
+    
+    .footer-left {
+        justify-content: center;
     }
     
     .footer-right {
-        gap: 20px;
+        justify-content: center;
+        gap: 14px;
+    }
+}
+
+/* Very small screens (<= 360px) */
+@media (max-width: 360px) {
+    .container {
+        padding: 16px 12px;
+    }
+    
+    header h1 {
+        font-size: 20px;
+    }
+    
+    .upload-area {
+        padding: 20px 10px;
+    }
+    
+    .upload-text {
+        font-size: 13px;
+    }
+    
+    .controls button {
+        font-size: 13px;
+        padding: 10px 12px;
+        min-height: 42px;
+    }
+    
+    .stat-number {
+        font-size: 20px;
     }
     
     .features-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
     }
+}
+
+/* Landscape mode on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .container {
+        padding: 16px 20px;
+    }
+    
+    header h1 {
+        font-size: 20px;
+    }
+    
+    .upload-area {
+        padding: 16px 12px;
+    }
+    
+    .upload-icon {
+        font-size: 24px;
+        margin-bottom: 4px;
+    }
+    
+    .controls {
+        flex-direction: row;
+        margin-top: 12px;
+    }
+    
+    .controls button {
+        padding: 8px 16px;
+        min-height: 36px;
+        font-size: 13px;
+    }
+    
+    .coming-soon {
+        display: none;
+    }
+}
+
+/* ============================================
+   TOUCH-OPTIMIZED (для мобильных устройств)
+   ============================================ */
+@media (hover: none) {
+    .controls button:hover:not(:disabled) {
+        transform: none;
+    }
+    
+    .upload-area:hover {
+        border-color: var(--border-color);
+        background: rgba(255, 255, 255, 0.02);
+    }
+    
+    .action-btn:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.03);
+        border-color: var(--border-color);
+        color: var(--text-muted);
+    }
+    
+    .footer-left a:hover,
+    .footer-right a:hover {
+        color: var(--text-secondary);
+    }
+}
+
+/* ============================================
+   DARK MODE SUPPORT (System preference)
+   ============================================ */
+@media (prefers-color-scheme: light) {
+    /* Не используем, так как у нас темная тема по умолчанию */
 }
