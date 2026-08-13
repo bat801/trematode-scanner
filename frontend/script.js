@@ -1,20 +1,29 @@
 const API_URL = 'http://localhost:8000/detect/';
+
+// DOM Elements
 const fileInput = document.getElementById('fileInput');
 const uploadArea = document.getElementById('uploadArea');
 const analyzeBtn = document.getElementById('analyzeBtn');
 const clearBtn = document.getElementById('clearBtn');
 const resultImage = document.getElementById('resultImage');
 const countDisplay = document.getElementById('countDisplay');
+const statusDisplay = document.getElementById('statusDisplay');
 const loading = document.getElementById('loading');
 const resultContainer = document.getElementById('resultContainer');
 
+// Future feature buttons
+const saveResultsBtn = document.getElementById('saveResultsBtn');
+const exportCSVBtn = document.getElementById('exportCSVBtn');
+const exportReportBtn = document.getElementById('exportReportBtn');
+
 let selectedFile = null;
 let isProcessing = false;
-let currentImageUrl = null; // Для хранения URL объекта
+let currentImageUrl = null;
+let lastResult = null; // Store last result for future export
 
-// --------------------------------------------------------------
-// 1. ЗАГРУЗКА ФАЙЛА
-// --------------------------------------------------------------
+// ============================================================
+// 1. FILE UPLOAD HANDLERS
+// ============================================================
 uploadArea.addEventListener('click', function(e) {
     if (e.target === fileInput) return;
     fileInput.click();
@@ -45,16 +54,16 @@ fileInput.addEventListener('change', (e) => {
     fileInput.value = '';
 });
 
-// --------------------------------------------------------------
-// 2. ОБРАБОТКА ВЫБРАННОГО ФАЙЛА
-// --------------------------------------------------------------
+// ============================================================
+// 2. FILE HANDLER
+// ============================================================
 function handleFile(file) {
     if (isProcessing) return;
     
     selectedFile = file;
     analyzeBtn.disabled = false;
+    statusDisplay.textContent = '📤';
     
-    // Создаем URL для предпросмотра
     if (currentImageUrl) {
         URL.revokeObjectURL(currentImageUrl);
     }
@@ -65,9 +74,9 @@ function handleFile(file) {
     countDisplay.textContent = '⏳';
 }
 
-// --------------------------------------------------------------
-// 3. АНАЛИЗ ИЗОБРАЖЕНИЯ
-// --------------------------------------------------------------
+// ============================================================
+// 3. ANALYSIS
+// ============================================================
 analyzeBtn.addEventListener('click', async function(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -76,11 +85,16 @@ analyzeBtn.addEventListener('click', async function(e) {
 
     isProcessing = true;
     analyzeBtn.disabled = true;
-    loading.style.display = 'block';
+    loading.classList.add('active');
+    statusDisplay.textContent = '🧬';
     
-    // Скрываем старое изображение на время загрузки
     resultImage.style.display = 'none';
     countDisplay.textContent = '⏳';
+    
+    // Disable future feature buttons
+    saveResultsBtn.disabled = true;
+    exportCSVBtn.disabled = true;
+    exportReportBtn.disabled = true;
 
     const formData = new FormData();
     formData.append('file', selectedFile);
@@ -93,14 +107,15 @@ analyzeBtn.addEventListener('click', async function(e) {
 
         if (!response.ok) {
             const errorText = await response.text();
-            throw new Error(`Ошибка сервера (${response.status}): ${errorText}`);
+            throw new Error(`Server error (${response.status}): ${errorText}`);
         }
 
         const data = await response.json();
         
-        console.log('✅ Анализ завершен, найдено:', data.count);
+        console.log('✅ Analysis complete, found:', data.count);
+        lastResult = data;
         
-        // Конвертируем base64 в Blob
+        // Convert base64 to Blob
         const base64Data = data.image;
         const byteCharacters = atob(base64Data);
         const byteNumbers = new Array(byteCharacters.length);
@@ -110,60 +125,131 @@ analyzeBtn.addEventListener('click', async function(e) {
         const byteArray = new Uint8Array(byteNumbers);
         const blob = new Blob([byteArray], { type: 'image/jpeg' });
         
-        // Создаем URL для результата
         if (currentImageUrl) {
             URL.revokeObjectURL(currentImageUrl);
         }
         currentImageUrl = URL.createObjectURL(blob);
         
-        // Устанавливаем изображение
         resultImage.src = currentImageUrl;
         resultImage.style.display = 'block';
         countDisplay.textContent = data.count;
-        loading.style.display = 'none';
+        statusDisplay.textContent = data.count > 0 ? '✅' : '🔍';
+        
+        loading.classList.remove('active');
         isProcessing = false;
         analyzeBtn.disabled = false;
         
+        // Enable future feature buttons (with dummy functionality)
+        saveResultsBtn.disabled = false;
+        exportCSVBtn.disabled = false;
+        exportReportBtn.disabled = false;
+        
         if (data.count === 0) {
-            alert('Объектов не найдено. Попробуйте другое фото.');
+            alert('No suspicious objects found. Try another image.');
         }
 
     } catch (error) {
-        console.error('❌ Ошибка:', error);
-        alert('Ошибка при анализе: ' + error.message);
+        console.error('❌ Error:', error);
+        alert('Analysis error: ' + error.message);
         countDisplay.textContent = '❌';
-        loading.style.display = 'none';
+        statusDisplay.textContent = '❌';
+        loading.classList.remove('active');
         isProcessing = false;
         analyzeBtn.disabled = false;
         resultImage.style.display = 'none';
     }
 });
 
-// --------------------------------------------------------------
-// 4. ОЧИСТКА
-// --------------------------------------------------------------
+// ============================================================
+// 4. CLEAR
+// ============================================================
 clearBtn.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
     
     selectedFile = null;
+    lastResult = null;
     fileInput.value = '';
+    
     if (currentImageUrl) {
         URL.revokeObjectURL(currentImageUrl);
         currentImageUrl = null;
     }
+    
     resultImage.src = '';
     resultImage.style.display = 'none';
     resultContainer.classList.remove('active');
     countDisplay.textContent = '0';
+    statusDisplay.textContent = '⏳';
     analyzeBtn.disabled = true;
     isProcessing = false;
-    loading.style.display = 'none';
+    loading.classList.remove('active');
+    
+    saveResultsBtn.disabled = true;
+    exportCSVBtn.disabled = true;
+    exportReportBtn.disabled = true;
 });
 
-// --------------------------------------------------------------
-// 5. ДОПОЛНИТЕЛЬНАЯ ЗАЩИТА ОТ ОБНОВЛЕНИЯ СТРАНИЦЫ
-// --------------------------------------------------------------
+// ============================================================
+// 5. FUTURE FEATURE BUTTONS (Placeholders)
+// ============================================================
+saveResultsBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    showComingSoon('Save Results');
+});
+
+exportCSVBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    showComingSoon('Export CSV');
+});
+
+exportReportBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    showComingSoon('Download Report');
+});
+
+function showComingSoon(featureName) {
+    // Show a nice toast notification
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--bg-card, #162b20);
+        color: var(--text-primary, #e8f5e9);
+        padding: 14px 28px;
+        border-radius: 12px;
+        border: 1px solid var(--accent-green, #43a047);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        font-size: 15px;
+        z-index: 1000;
+        animation: fadeIn 0.3s ease;
+        font-family: 'Segoe UI', sans-serif;
+        text-align: center;
+        max-width: 90%;
+    `;
+    notification.innerHTML = `
+        <span style="font-size:20px;">🚀</span>
+        <strong>${featureName}</strong> — coming soon in the next update!
+        <br>
+        <span style="font-size:13px; color: var(--text-muted, #6d8f7a);">
+            This feature is currently in development
+        </span>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.4s ease';
+        setTimeout(() => notification.remove(), 500);
+    }, 3500);
+}
+
+// ============================================================
+// 6. FORM PROTECTION
+// ============================================================
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('uploadForm');
     if (form) {
@@ -175,4 +261,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-console.log('🚀 Trematode Scanner загружен!');
+console.log('🚀 Trematode Scanner loaded successfully!');
+console.log('🔬 Prototype v0.1 - Built with ❤️ for biology researchers');

@@ -1,45 +1,121 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trematode Scanner — AI для биологов</title>
+    <title>Trematode Scanner — AI Parasite Detection</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔬</text></svg>">
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <header>
+            <div class="header-badge">
+                <span class="badge">🔬 PROTOTYPE v0.1</span>
+            </div>
             <h1>🦐 Trematode Scanner</h1>
-            <p>Загрузите фото чашки Петри и нейросеть подсветит подозрительные объекты</p>
+            <p class="subtitle">AI-powered parasite detection for Petri dish analysis</p>
+            <div class="features-preview">
+                <span>📸 Upload & Detect</span>
+                <span>🧠 YOLOv8 + OpenCV</span>
+                <span>⚡ Real-time Analysis</span>
+            </div>
         </header>
 
-        <!-- Форма с явным запретом отправки -->
+        <!-- Upload Form -->
         <form id="uploadForm" onsubmit="return false;" action="javascript:void(0);">
             <div class="upload-area" id="uploadArea">
-                <p>📸 Перетащите фото сюда или нажмите для выбора</p>
+                <div class="upload-icon">📸</div>
+                <p class="upload-text">Drag & drop your image here</p>
+                <p class="upload-hint">or click to browse files</p>
                 <input type="file" id="fileInput" accept="image/*">
             </div>
 
             <div class="controls">
-                <button id="analyzeBtn" type="button" disabled>🔍 Анализировать</button>
-                <button id="clearBtn" type="button">🗑 Очистить</button>
+                <button id="analyzeBtn" type="button" disabled>
+                    <span class="btn-icon">🔍</span> Analyze
+                </button>
+                <button id="clearBtn" type="button">
+                    <span class="btn-icon">🗑</span> Clear
+                </button>
             </div>
         </form>
 
+        <!-- Result Area -->
         <div id="resultContainer">
             <div id="imageWrapper">
-                <img id="resultImage" src="" alt="Результат анализа">
+                <img id="resultImage" src="" alt="Analysis result">
             </div>
             <div id="stats">
                 <div class="stat-card">
                     <span class="stat-number" id="countDisplay">0</span>
-                    <span class="stat-label">Объектов найдено</span>
+                    <span class="stat-label">Objects Detected</span>
                 </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="statusDisplay">⏳</span>
+                    <span class="stat-label">Status</span>
+                </div>
+            </div>
+            
+            <!-- Action Buttons (Future features) -->
+            <div class="action-buttons">
+                <button id="saveResultsBtn" type="button" class="action-btn secondary" disabled>
+                    💾 Save Results
+                </button>
+                <button id="exportCSVBtn" type="button" class="action-btn secondary" disabled>
+                    📊 Export CSV
+                </button>
+                <button id="exportReportBtn" type="button" class="action-btn secondary" disabled>
+                    📄 Download Report
+                </button>
             </div>
         </div>
 
-        <div id="loading" style="display: none;">⏳ Анализ изображения...</div>
+        <!-- Loading -->
+        <div id="loading">
+            <div class="spinner"></div>
+            <p>🧬 Analyzing sample...</p>
+        </div>
+
+        <!-- Coming Soon Section -->
+        <div class="coming-soon">
+            <h3>🚀 Coming Soon</h3>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <span class="feature-icon">📊</span>
+                    <span>Batch Processing</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📈</span>
+                    <span>History Dashboard</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🧬</span>
+                    <span>Custom Model Training</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🔬</span>
+                    <span>Microscope Integration</span>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-left">
+                <span>© 2026 <a href="https://github.com/bat801" target="_blank">bat801</a></span>
+                <span class="footer-divider">|</span>
+                <span>🔬 <a href="https://github.com/bat801/trematode-scanner" target="_blank">GitHub Repository</a></span>
+            </div>
+            <div class="footer-right">
+                <a href="https://t.me/bat801_N" target="_blank" class="footer-link">📱 Telegram</a>
+                <a href="https://github.com/bat801" target="_blank" class="footer-link">🐙 GitHub</a>
+            </div>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>
